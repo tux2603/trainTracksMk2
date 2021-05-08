@@ -12,7 +12,7 @@ $(OBJECTS): tracklib/%.o: tracklib/%.cpp
 	$(CPP) -o $@ -c $< $(CPP_FLAGS)
 
 TrackLib$(PY_EXT): tracklib/bind.cpp $(OBJECTS)
-	$(CPP) -o $@ $^ $(CPP_FLAGS) -shared $(PY_LIBS)
+	$(CPP) -o $@ $^ $(CPP_FLAGS) -Wno-unused-value -shared $(PY_LIBS)
 
 test:
 	./unittests.py

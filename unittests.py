@@ -88,7 +88,7 @@ class CellTest(unittest.TestCase):
         self.assertEqual(cell.peak(Direction.south), Direction.west)
         self.assertEqual(cell.peak(Direction.west), Direction.south)
 
-    def test_sprung_point(self):
+    def test_sprung_junction(self):
         cell = Cell(CellType.sprung_junction, CellVariant.left_hand, CellRotation.none, CellState.left_branch)
         self.assertEqual(cell.peak(Direction.north), Direction.east)
         self.assertEqual(cell.peak(Direction.east), Direction.north)
@@ -113,6 +113,27 @@ class CellTest(unittest.TestCase):
         self.assertEqual(cell.state, CellState.right_branch)
         cell.enter(Direction.west)
         self.assertEqual(cell.state, CellState.right_branch)
+
+    def test_lazy_junction(self):
+        cell = Cell(CellType.lazy_junction, CellVariant.symmetric, CellRotation.none, CellState.left_branch)
+        self.assertEqual(cell.enter(Direction.north), Direction.east)
+        self.assertEqual(cell.state, CellState.left_branch)
+        self.assertEqual(cell.enter(Direction.east), Direction.north)
+        self.assertEqual(cell.state, CellState.left_branch)
+        self.assertEqual(cell.enter(Direction.west), Direction.north)
+        self.assertEqual(cell.state, CellState.right_branch)
+        self.assertEqual(cell.enter(Direction.north), Direction.west)
+        self.assertEqual(cell.state, CellState.right_branch)
+
+    def test_alternating_junction(self):
+        cell = Cell(CellType.alternating_junction, CellVariant.symmetric, CellRotation.none, CellState.left_branch)
+        self.assertEqual(cell.enter(Direction.north), Direction.east)
+        self.assertEqual(cell.state, CellState.right_branch)
+        self.assertEqual(cell.enter(Direction.north), Direction.west)
+        self.assertEqual(cell.state, CellState.left_branch)
+        self.assertEqual(cell.enter(Direction.north), Direction.east)
+        self.assertRaises(InvalidDirectionException, lambda: cell.enter(Direction.east))
+        self.assertRaises(InvalidDirectionException, lambda: cell.enter(Direction.west)) 
 
 
 if __name__ == '__main__':

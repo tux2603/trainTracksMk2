@@ -3,7 +3,8 @@
 
 #include "types.h"
 
-#define DEFAULT_DIRECTION_ERROR "Train entered a cell from an invalid direction!"
+#define DEFAULT_DIRECTION_ERROR "Attempted to enter a cell from an invalid direction!"
+#define DEFAULT_VARIANT_ERROR "The current cell variant is invalid for this cell type!"
 
 
 Rotation operator*(const Rotation &a, const Rotation &b) {
@@ -46,5 +47,20 @@ InvalidDirectionException::~InvalidDirectionException() {
 }
 
 const char *InvalidDirectionException::what() const throw() {
+    return errorMessage;
+}
+
+
+
+InvalidVariantException::InvalidVariantException() {
+    errorMessage = new char[strlen(DEFAULT_VARIANT_ERROR)];
+    sprintf(errorMessage, "%s", DEFAULT_VARIANT_ERROR);
+}
+
+InvalidVariantException::~InvalidVariantException() {
+    delete[] errorMessage;
+}
+
+const char *InvalidVariantException::what() const throw() {
     return errorMessage;
 }

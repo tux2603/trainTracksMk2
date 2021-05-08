@@ -14,13 +14,13 @@ class Cell {
     Cell &operator=(const Cell *other);
 
     CellType getType() const;
-    Variant getVariant() const;
+    Variant  getVariant() const;
     Rotation getRotation() const;
-    State getState() const;
-    void setType(CellType type);
-    void setVariant(Variant variant);
-    void setRotation(Rotation rotation);
-    void setState(State state);
+    State    getState() const;
+    void     setType(CellType type);
+    void     setVariant(Variant variant);
+    void     setRotation(Rotation rotation);
+    void     setState(State state);
 
     Cell &rotate(Rotation rotation);
     Cell &operator*(Rotation rotation);
@@ -30,10 +30,27 @@ class Cell {
 
   private:
     CellType type;
-    Variant variant;
+    Variant  variant;
     Rotation rotation;
-    State state;
+    State    state;
+};
+
+class CellGrid {
+  public:
+    CellGrid(int width, int height);
+    CellGrid(const CellGrid &other);
+    ~CellGrid();
+
+    int  getHeight() const;
+    int  getWidth() const;
+    void setHeight(int height);
+    void setWidth(int width);
+
+  private:
+    int width, height;
+    Cell **cells;
     
+    void rebuildCells(int newWidth, int newHeight);
 };
 
 #endif

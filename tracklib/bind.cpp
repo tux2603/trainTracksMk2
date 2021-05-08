@@ -67,6 +67,7 @@ PYBIND11_MODULE(TrackLib, m) {
 
 
     py::register_exception<InvalidDirectionException>(m, "InvalidDirectionException", PyExc_ValueError);
+    py::register_exception<InvalidVariantException>(m, "InvalidVariantException", PyExc_ValueError);
 
 
 
@@ -86,4 +87,18 @@ PYBIND11_MODULE(TrackLib, m) {
     pyCell.def_property("rotation", &Cell::getRotation, &Cell::setRotation);
     pyCell.def_property("state", &Cell::getState, &Cell::setState);
     // pyCell.def(py::init<const Cell &>());
+
+    auto pyCellGrid = py::class_<CellGrid>(m, "CellGrid");
+    pyCellGrid.def(py::init<int, int>());
+    pyCellGrid.def_property("height", &CellGrid::getHeight, &CellGrid::setHeight);
+    pyCellGrid.def_property("width", &CellGrid::getWidth, &CellGrid::setWidth);
+    pyCellGrid.def_property(
+            "size",
+            [](CellGrid &self) {
+                return py::make_tuple(self.getWidth(), self.getHeight());
+            },
+            [](CellGrid &self, std::tuple<int, int> s) {
+                self.setWidth(std::get<0>(s));
+                self.setHeight(std::get<1>(s));
+            });
 }
